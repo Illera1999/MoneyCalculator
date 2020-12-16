@@ -14,7 +14,7 @@ public class MoneyCalculator {
     private String currencyFrom;
     private String currencyTo;
     
-
+/*
     public static void main(String[] args) throws Exception {
         MoneyCalculator moneyCalculator = new MoneyCalculator();
         moneyCalculator.execute();
@@ -40,9 +40,9 @@ public class MoneyCalculator {
     }
     private void output(){
         System.out.println(amount + " " + currencyFrom + " equivalen a " + amount*exchangeRate + " " + currencyTo);
-    }
+    }*/
 
-    public static double getExchangeRate(String from, String to) throws IOException {
+    public double getExchangeRate(String from, String to) throws IOException {
         URL url = 
             new URL("https://api.exchangeratesapi.io/latest?base=" + from + "&symbols=" + to + "&compact=y");
         URLConnection connection = url.openConnection();
