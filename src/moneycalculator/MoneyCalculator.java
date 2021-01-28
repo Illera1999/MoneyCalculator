@@ -5,13 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class MoneyCalculator {
   
-    private double exchangeRate;
+    private ExchangeRate exchangeRate;
     private Currency currencyTo;
     private Money dinero;
     private Map <String,Currency> lista =  new HashMap <>();;
@@ -48,23 +50,22 @@ public class MoneyCalculator {
         currencyTo = lista.get(scanner.next().toUpperCase());
     }
     private void process()throws Exception{
-        exchangeRate = getExchangeRate(dinero.getCurrency().getIsoCode(),currencyTo.getIsoCode());
+        exchangeRate = getExchangeRate(exchangeRate.getFrom(),exchangeRate.getTo());
     }
     private void output(){
-        System.out.println(dinero.getAmount() + dinero.getCurrency().getSymbol() + " equivalen a " + dinero.getAmount()*exchangeRate + currencyTo.getSymbol());
+        System.out.println(dinero.getAmount() + dinero.getCurrency().getSymbol() + " equivalen a " + dinero.getAmount()*exchangeRate.getRate() + currencyTo.getSymbol());
     }
 
-    public double getExchangeRate(String from, String to) throws IOException {   
+    public ExchangeRate getExchangeRate(Currency from, Currency to) throws IOException {   
         URL url = 
-            new URL("https://api.exchangeratesapi.io/latest?base=" + from + "&symbols=" + to + "&compact=y");
+            new URL("https://api.exchangeratesapi.io/latest?base=" + from.getIsoCode() + "&symbols=" + to.getIsoCode() + "&compact=y");
         URLConnection connection = url.openConnection();
         try (BufferedReader reader = 
                 new BufferedReader(
                         new InputStreamReader(connection.getInputStream()))) {
             String line = reader.readLine();
-            String line1 = line.substring(line.indexOf(to)+5, line.indexOf("}"));
-            return Double.parseDouble(line1);
-
+            String line1 = line.substring(line.indexOf(to.getIsoCode())+5, line.indexOf("}"));
+            return new ExchangeRate( from, to, LocalDate.of(2018,Month.SEPTEMBER,26),Double.parseDouble(line1));
         }
     }   
 }
