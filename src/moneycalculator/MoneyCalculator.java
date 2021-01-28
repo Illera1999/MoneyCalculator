@@ -5,19 +5,28 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MoneyCalculator {
   
-    private double amount;
     private double exchangeRate;
-    private String currencyFrom;
-    private String currencyTo;
+    private Currency currencyFrom;
+    private Currency currencyTo;
+    private Money dinero;
+    private Map <String,Currency> lista =  new HashMap <>();;
     
-/*
+
     public static void main(String[] args) throws Exception {
         MoneyCalculator moneyCalculator = new MoneyCalculator();
         moneyCalculator.execute();
+    }
+
+    public MoneyCalculator() {
+        lista.put("USD", new Currency("USD", "Dólar americano", "$"));
+        lista.put("EUR", new Currency("EUR", "Euros", "€"));
+        lista.put("GBP", new Currency("GBP", "Libras Esterlinas", "£"));
     }
 
     private void execute() throws Exception{
@@ -28,21 +37,25 @@ public class MoneyCalculator {
     private void input(){
         System.out.println("Introduzca una cantidad: ");
         Scanner scanner = new Scanner(System.in);
-        amount = Double.parseDouble(scanner.next());
+        double amount = Double.parseDouble(scanner.next());
         
         System.out.println("Introduzca divisa origen: ");
-        currencyFrom = scanner.next();
+        currencyFrom = lista.get(scanner.next().toUpperCase());
+        //toUpperCase():Convertir todos los caracteres de una cadena dada a mayúsculas
+        
+        dinero = new Money(amount,currencyFrom);
+        
         System.out.println("Introduzca divisa destino: ");
-        currencyTo = scanner.next();
+        currencyTo = lista.get(scanner.next().toUpperCase());
     }
     private void process()throws Exception{
-        exchangeRate = getExchangeRate(currencyFrom,currencyTo);
+        exchangeRate = getExchangeRate(currencyFrom.getIsoCode(),currencyTo.getIsoCode());
     }
     private void output(){
-        System.out.println(amount + " " + currencyFrom + " equivalen a " + amount*exchangeRate + " " + currencyTo);
-    }*/
+        System.out.println(dinero.getAmount() + currencyFrom.getSymbol() + " equivalen a " + dinero.getAmount()*exchangeRate + currencyTo.getSymbol());
+    }
 
-    public double getExchangeRate(String from, String to) throws IOException {
+    public double getExchangeRate(String from, String to) throws IOException {   
         URL url = 
             new URL("https://api.exchangeratesapi.io/latest?base=" + from + "&symbols=" + to + "&compact=y");
         URLConnection connection = url.openConnection();
