@@ -12,7 +12,6 @@ import java.util.Scanner;
 public class MoneyCalculator {
   
     private double exchangeRate;
-    private Currency currencyFrom;
     private Currency currencyTo;
     private Money dinero;
     private Map <String,Currency> lista =  new HashMap <>();;
@@ -40,7 +39,7 @@ public class MoneyCalculator {
         double amount = Double.parseDouble(scanner.next());
         
         System.out.println("Introduzca divisa origen: ");
-        currencyFrom = lista.get(scanner.next().toUpperCase());
+        Currency currencyFrom = lista.get(scanner.next().toUpperCase());
         //toUpperCase():Convertir todos los caracteres de una cadena dada a mayúsculas
         
         dinero = new Money(amount,currencyFrom);
@@ -49,10 +48,10 @@ public class MoneyCalculator {
         currencyTo = lista.get(scanner.next().toUpperCase());
     }
     private void process()throws Exception{
-        exchangeRate = getExchangeRate(currencyFrom.getIsoCode(),currencyTo.getIsoCode());
+        exchangeRate = getExchangeRate(dinero.getCurrency().getIsoCode(),currencyTo.getIsoCode());
     }
     private void output(){
-        System.out.println(dinero.getAmount() + currencyFrom.getSymbol() + " equivalen a " + dinero.getAmount()*exchangeRate + currencyTo.getSymbol());
+        System.out.println(dinero.getAmount() + dinero.getCurrency().getSymbol() + " equivalen a " + dinero.getAmount()*exchangeRate + currencyTo.getSymbol());
     }
 
     public double getExchangeRate(String from, String to) throws IOException {   
