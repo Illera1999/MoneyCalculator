@@ -17,7 +17,7 @@ public class MoneyCalculator {
     private Currency currencyTo;
     private Currency currencyFrom;
     private Money dinero;
-    private Map <String,Currency> lista =  new HashMap <>();;
+    private CurrencyList lista;
     
 
     public static void main(String[] args) throws Exception {
@@ -26,9 +26,7 @@ public class MoneyCalculator {
     }
 
     public MoneyCalculator() {
-        lista.put("USD", new Currency("USD", "Dólar americano", "$"));
-        lista.put("EUR", new Currency("EUR", "Euros", "€"));
-        lista.put("GBP", new Currency("GBP", "Libras Esterlinas", "£"));
+        lista = new CurrencyList();
     }
 
     private void execute() throws Exception{
@@ -48,7 +46,7 @@ public class MoneyCalculator {
         dinero = new Money(amount,currencyFrom);
         
         System.out.println("Introduzca divisa destino: ");
-        currencyTo = lista.get(scanner.next().toUpperCase());
+        currencyTo = lista.get(scanner.next());
     }
     private void process()throws Exception{
         exchangeRate = getExchangeRate(currencyFrom,currencyTo);
